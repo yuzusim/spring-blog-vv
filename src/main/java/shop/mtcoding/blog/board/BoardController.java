@@ -15,6 +15,12 @@ import java.util.List;
 public class BoardController {
     private final BoardNativeRepository boardNativeRepository;
 
+    @PostMapping("/board/{id}/delete")
+    public String delete(@PathVariable Integer id){
+        boardNativeRepository.deleteById(id);
+        return "redirect:/";
+    }
+
     @PostMapping("/board/save")
     public String save(String title, String content, String username) {
         boardNativeRepository.save(title, content, username);
@@ -43,7 +49,10 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable Integer id) {
+    public String detail(@PathVariable Integer id, HttpServletRequest request) {
+        Board board = boardNativeRepository.findById(id);
+        request.setAttribute("board", board);
+
         return "board/detail";
     } // Integer쓰는 이유 안들어 오면 null 이니까
 
