@@ -25,12 +25,12 @@ public class Board { // Entity 무조건 기본 생성자가 있어야 오류 �
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
 
+    // 생성자 만들기
     public Board(String title, String content, String username) {
         this.title = title;
         this.content = content;
         this.username = username;
     }
-
 
 
 }

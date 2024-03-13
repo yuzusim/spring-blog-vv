@@ -13,6 +13,22 @@ import java.util.List;
 public class BoardPersistRepository {
     private final EntityManager em;
 
+    public List<Board> findAll(){
+        Query query =
+                em.createQuery("select b from Board b order by b.id desc", Board.class);
+
+        return query.getResultList();
+    }
+
+//
+//    public List<Board> findAll() {
+//        Query query =
+//                em.createNativeQuery("select * from board_tb order by id desc", Board.class);
+//        return (List<Board>) query.getResultList(); // 앞에 다운 캐스팅
+//        // 조인시 DTO 만들어서 받아야 함
+//
+//    }
+
 
     @Transactional
     public Board save(Board board) {
@@ -30,13 +46,13 @@ public class BoardPersistRepository {
         return (Board) query.getSingleResult();
     }
 
-    public List<Board> findAll() {
-        Query query =
-                em.createNativeQuery("select * from board_tb order by id desc", Board.class);
-        return (List<Board>) query.getResultList(); // 앞에 다운 캐스팅
-        // 조인시 DTO 만들어서 받아야 함
-
-    }
+//    public List<Board> findAll() {
+//        Query query =
+//                em.createNativeQuery("select * from board_tb order by id desc", Board.class);
+//        return (List<Board>) query.getResultList(); // 앞에 다운 캐스팅
+//        // 조인시 DTO 만들어서 받아야 함
+//
+//    }
 
 
     @Transactional
