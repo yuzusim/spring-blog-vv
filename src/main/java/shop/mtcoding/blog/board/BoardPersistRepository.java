@@ -13,21 +13,52 @@ import java.util.List;
 public class BoardPersistRepository {
     private final EntityManager em;
 
+    @Transactional
+    public void deleteByIdV2(int id) {
+        // 비영속 객체를 하나 만든다.
+        Board board = findById(id); // id만 넣어서 테스트도 해보고 함
+        em.remove(board); // PC 에서 객체지우고 (트랜잭션 종료시) 삭제 쿼리를 전송함
+        // 조회 먼저 동기 화 시킴
+        // 있으면 리무브
+        // 없으면 null
+
+    }
+
+    @Transactional
+    public void deleteById(int id) {
+        Query query = em.createQuery("delete from Board b where b.id = :id");
+//        Board board = findById(id);
+//        em.remove(board);
+        query.setParameter("id", id);
+        query.executeUpdate();
+
+        // 비영속 객체를 하나 만든다.
+        //Board board = findById(id);
+        // 조회 먼저 동기 화 시킴
+        // 있으면 리무브
+        // 없으면 null
+        //em.remove(board);
+
+    }
+
+
+
+    public Board findById(int id){
+        Board board = em.find(Board.class, id); // 조회가 끝남
+        return board;
+
+        // em PC에서 조회가 끝난다.
+
+    }
+
+
+
     public List<Board> findAll(){
         Query query =
                 em.createQuery("select b from Board b order by b.id desc", Board.class);
 
         return query.getResultList();
     }
-
-//
-//    public List<Board> findAll() {
-//        Query query =
-//                em.createNativeQuery("select * from board_tb order by id desc", Board.class);
-//        return (List<Board>) query.getResultList(); // 앞에 다운 캐스팅
-//        // 조인시 DTO 만들어서 받아야 함
-//
-//    }
 
 
     @Transactional
@@ -39,30 +70,7 @@ public class BoardPersistRepository {
         return board; // 래퍼런스니까 동기화가 되어 있다. board 그 자체!
     }
 
-    public Board findById(int id) {
-        Query query =
-                em.createNativeQuery("select * from board_tb where id = ?", Board.class);
-        query.setParameter(1, id);
-        return (Board) query.getSingleResult();
-    }
 
-//    public List<Board> findAll() {
-//        Query query =
-//                em.createNativeQuery("select * from board_tb order by id desc", Board.class);
-//        return (List<Board>) query.getResultList(); // 앞에 다운 캐스팅
-//        // 조인시 DTO 만들어서 받아야 함
-//
-//    }
-
-
-    @Transactional
-    public void deleteById(int id) {
-        Query query =
-                em.createNativeQuery("delete from board_tb where id = ?");
-        query.setParameter(1, id);
-
-        query.executeUpdate();
-    }
 
 
     @Transactional

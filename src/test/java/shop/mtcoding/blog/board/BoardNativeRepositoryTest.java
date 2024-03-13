@@ -60,7 +60,7 @@ public class BoardNativeRepositoryTest {
 
         // when
         Board board = boardNativeRepository.findById(id);
-       // System.out.println("findById_test:"+board);
+        System.out.println("findById_test:"+board);
 
         // then
 //        System.out.println("findAll_test/size : "+ boardList.size());
