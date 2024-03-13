@@ -32,5 +32,13 @@ public class Board { // Entity 무조건 기본 생성자가 있어야 오류 �
         this.username = username;
     }
 
+    // 오브젝트 지향 프로그램이라서 업데이트 메서드를 만들어 주고 한번에 변경
+    public void update(BoardRequest.UpdateDTO reqDTO){
+        this.title = reqDTO.getTitle();
+        this.content = reqDTO.getContent();
+        this.username = reqDTO.getUsername();
+
+    }
+
 
 }

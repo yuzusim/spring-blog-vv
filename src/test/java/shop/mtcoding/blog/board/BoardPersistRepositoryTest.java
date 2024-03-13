@@ -22,6 +22,21 @@ public class BoardPersistRepositoryTest {
     private EntityManager em;
 
     @Test
+    public void updateById_test() {
+        // given
+        int id = 1;
+        String title = "제목수정1";
+
+        // when
+        Board board = boardPersistRepository.findById(id); //조회된 데이터! 영속화 됨!
+        board.setTitle(title); // 실제 쿼리가 날아간 건 아니고, pc에 있는 값을 변경한 것임
+        // 트랜젝션이 종료하면 업데이트가 날아가는데 테스트에선 불가능하니까 em.flush 해줌
+        em.flush();
+
+    } // 더티 체킹
+
+
+    @Test
     public void save_test(){
         // given
 //        String title = "제목5";

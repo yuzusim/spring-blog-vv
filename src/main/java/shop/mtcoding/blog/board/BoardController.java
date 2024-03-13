@@ -2,6 +2,7 @@ package shop.mtcoding.blog.board;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,18 @@ public class BoardController {
     private final BoardNativeRepository boardNativeRepository;
     private final BoardPersistRepository boardPersistRepository;
 
+
+    // 트랜잭션 시간이 너무 길어져서 지금은 이렇게 나중에는 서비스 할 수 있는 서비스 로직으로 따로 만들기
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable Integer id, String title, String content, String username) {
-//        System.out.println("id : "+id);
-//        System.out.println("title : "+title);
-//        System.out.println("content : "+content);
-//        System.out.println("username : "+username);
-        boardNativeRepository.updateById(id, title, content, username);
+    public String update(@PathVariable Integer id, BoardRequest.UpdateDTO reqDTO) {
+        // 조회해서 영속화 시킴. 객체의 상태만 바꾸면 끝!
+        boardPersistRepository.updateById(id, reqDTO);
         return "redirect:/board/" + id;
     }
 
     @GetMapping("/board/{id}/update-form")
     public String updateForm(@PathVariable Integer id, HttpServletRequest request) {
-        Board board = boardNativeRepository.findById(id);
+        Board board = boardPersistRepository.findById(id);
         request.setAttribute("board", board);
         return "board/update-form";
     }
@@ -68,7 +68,7 @@ public class BoardController {
 
     @GetMapping("/board/{id}")
     public String detail(@PathVariable Integer id, HttpServletRequest request) {
-        Board board = boardNativeRepository.findById(id);
+        Board board = boardPersistRepository.findById(id);
         request.setAttribute("board", board);
 
         return "board/detail";
