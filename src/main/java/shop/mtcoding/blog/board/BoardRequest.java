@@ -6,6 +6,13 @@ import shop.mtcoding.blog.user.User;
 public class BoardRequest {
 
     @Data
+    public static class UpdateDTO{
+        private String title;
+        private String content;
+
+    }
+
+    @Data
     public static class SaveDTO{
         private String title;
         private String content;
@@ -18,7 +25,13 @@ public class BoardRequest {
                     .user(user) // PK만 들어 있어도 됨
                     .build();
         }
+
     }
+
+
+
+
+
 
 
 }

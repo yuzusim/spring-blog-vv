@@ -2,7 +2,6 @@ package shop.mtcoding.blog.board;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,6 +13,21 @@ import java.util.List;
 @Repository
 public class BoardRepository {
     private final EntityManager em;
+
+
+    @Transactional
+    public void updeteById(int id, String title, String content){
+        Board board = findById(id);
+        board.setTitle(title);
+        board.setContent(content); // 객체 상태를 변경하고
+    } // 더티체킹
+
+    @Transactional
+    public void deleteById(int id){
+        Query query = em.createQuery("delete from  Board b where b.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
 
     @Transactional
     public Board save(Board board){

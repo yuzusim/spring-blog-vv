@@ -11,7 +11,6 @@ import java.util.List;
 @Import(BoardRepository.class)
 @DataJpaTest
 public class BoardRepositoryTest {
-    
 
     @Autowired
     private BoardRepository boardRepository;
@@ -19,6 +18,32 @@ public class BoardRepositoryTest {
     @Autowired
     private EntityManager em;
 
+    @Test
+    public void updeteById_test(){
+        // given
+        int id = 1;
+        String title = "title1";
+        String content = "content1";
+
+        // when
+        boardRepository.updeteById(id, title, content);
+        em.flush();
+        //
+
+        // then
+
+    }
+
+    @Test
+    public void deleteById_test() {
+        // given
+        int id = 1;
+        // when
+        boardRepository.deleteById(id); //딜리트 쿼리 발동함
+        // then
+        System.out.println(boardRepository.findAll().size());
+
+    }
 
     @Test
     public void findAll_inqueryv2_test() {
@@ -33,38 +58,37 @@ public class BoardRepositoryTest {
     }
 
 
-
     @Test
-    public void randomquery_test(){
-        int[] ids = {1,2};
+    public void randomquery_test() {
+        int[] ids = {1, 2};
 
         // select u from User u where u.id in (?,?);
         String q = "select u from User u where u.id in (";
-        for (int i=0; i<ids.length; i++){
-            if(i==ids.length-1){
+        for (int i = 0; i < ids.length; i++) {
+            if (i == ids.length - 1) {
                 q = q + "?)";
-            }else{
+            } else {
                 q = q + "?,";
             }
         }
         System.out.println(q);
     }
 
-   @Test
-   public void findAll_custom_inquery_test(){
-       List<Board> boardList = boardRepository.findAll();
+    @Test
+    public void findAll_custom_inquery_test() {
+        List<Board> boardList = boardRepository.findAll();
 
-       int[] userIds = boardList.stream().mapToInt(board -> board.getUser().getId()).distinct().toArray();
-       for (int i : userIds){
-           System.out.println(i);
-       }
-       // 찌그러뜨리고 다시 수집
-       // select * from user_tb where id in (3,2,1,1);
-       // select * from user_tb where id in (3,2,1);
+        int[] userIds = boardList.stream().mapToInt(board -> board.getUser().getId()).distinct().toArray();
+        for (int i : userIds) {
+            System.out.println(i);
+        }
+        // 찌그러뜨리고 다시 수집
+        // select * from user_tb where id in (3,2,1,1);
+        // select * from user_tb where id in (3,2,1);
 
-       // then
+        // then
 
-   }
+    }
 
 
     @Test

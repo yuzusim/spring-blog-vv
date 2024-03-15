@@ -15,12 +15,12 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO reqDTO) {
-        User sessionUser = userRepository.findByUsernameAndpassword(reqDTO);
+//        User sessionUser = userRepository.findByUsernameAndpassword(reqDTO);
 
 //        if (sessionUser == null) {
 //            return "redirect:/login-form";
-//        }
-        session.setAttribute("sessionUser", sessionUser);
+////        }
+//        session.setAttribute("sessionUser", sessionUser);
         return "redirect:/";
 
     }
