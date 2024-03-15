@@ -20,6 +20,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final HttpSession session;
 
+
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO reqDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -47,8 +48,6 @@ public class BoardController {
         boardRepository.deleteById(id);
         return "redirect:/";
     }
-
-
 
     @GetMapping("/")
     public String index(HttpServletRequest request) {
