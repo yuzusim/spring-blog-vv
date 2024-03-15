@@ -14,7 +14,6 @@ import java.util.List;
 public class BoardRepository {
     private final EntityManager em;
 
-
     @Transactional
     public void updeteById(int id, String title, String content){
         Board board = findById(id);
