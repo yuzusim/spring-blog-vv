@@ -69,7 +69,7 @@ public class BoardJPARepositoryTest {
 
         // then
         System.out.println("findByIdJoinUser_test : "+board.getTitle());
-        System.out.println("findByIdJoinUser_test : "+board.getUser());
+        System.out.println("findByIdJoinUser_test : "+board.getUser().getUsername());
 
     }
 
@@ -83,7 +83,6 @@ public class BoardJPARepositoryTest {
        List<Board> boardList =boardJPARepository.findAll(sort);
 
         // then
-
         System.out.println("findAll_test : "+boardList);
     }
 

@@ -20,6 +20,19 @@ public class UserJPARepositoryTest {
     @Autowired
     private UserJPARepository userJPARepository;
 
+
+    @Test
+    public void findByUsernameAndPassword_test() {
+        // given
+        String username = "ssar";
+        String password = "1234";
+        // when
+        userJPARepository.findByUsernameAndPassword(username, password);
+
+        // then
+
+    }
+
     @Test
     public void save_test() {
         // given
@@ -80,17 +93,7 @@ public class UserJPARepositoryTest {
 
     }
 
-    @Test
-    public void findByUsernameAndPassword_test() {
-        // given
-        String username = "ssar";
-        String password = "1234";
-        // when
-        userJPARepository.findByUsernameAndPassword(username, password);
 
-        // then
-
-    }
 
 
 }

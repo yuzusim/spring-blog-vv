@@ -25,7 +25,7 @@ public class UserRepository {
         return user;
     }
 
-    @Transactional
+    @Transactional // 여기에 붙이면 안돼
     public User save(User user){
         em.persist(user);
         return user;

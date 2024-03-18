@@ -15,21 +15,24 @@ import shop.mtcoding.blog._core.errs.exception.Exception401;
 @RequiredArgsConstructor
 @Controller
 public class UserController {
+    private final UserService userService;
     private final UserRepository userRepository;
     private final HttpSession session;
 
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO reqDTO) {
-        try {
-            userRepository.save(reqDTO.toEntity());
-        } catch (DataIntegrityViolationException e) {
-            throw new Exception400("동일한 유저 네임이 존재합니다.");
-        }
+        userService.회원가입(reqDTO);
+//        try {
+//            userRepository.save(reqDTO.toEntity());
+//        } catch (DataIntegrityViolationException e) {
+//            throw new Exception400("동일한 유저 네임이 존재합니다.");
+//        }
         return "redirect:/";
     }
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO reqDTO) {
+
         try {
             User sessionUser = userRepository.findByUsernameAndpassword(reqDTO);
             session.setAttribute("sessionUser", sessionUser);
