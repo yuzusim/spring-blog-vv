@@ -27,11 +27,13 @@ public class Board { // Entity 무조건 기본 생성자가 있어야 오류 �
     @ManyToOne(fetch = FetchType.LAZY) // user_id 유저명의 id(유저의 pk) 필드로 만들어 줄께
     private User user; // 유저 객체를 넣음
 
-
     // private String username;
 
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
+
+    @Transient // 테이블 생성이 안됨
+    private boolean isOwner;
 
     // 생성자 빌더 패턴으로 받기
     @Builder //  필요한것만 .해서 쓰면 됨

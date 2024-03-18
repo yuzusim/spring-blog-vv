@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shop.mtcoding.blog._core.errs.exception.Exception400;
+import shop.mtcoding.blog._core.errs.exception.Exception401;
+import shop.mtcoding.blog._core.errs.exception.Exception404;
 
 import java.util.Optional;
 
@@ -13,6 +15,33 @@ public class UserService {
     private final UserJPARepository userJPARepository;
     // 이제 컨트롤러는 서비스에 의존
     // 서비스는 레포에 의존
+
+
+    public User 회원수정(int id, UserRequest.UpdateDTO reqDTO){
+        User user = userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다.")); // 예외처리 옵셔널이 붙어있어서 강제 처리
+           user.setPassword(reqDTO.getPassword());
+           user.setEmail(reqDTO.getEmail());
+           return user;
+    }// 더티체킹
+
+//    public User 회원수정폼(int id){
+//        User user = userJPARepository.findById(id)
+//        .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다.")); // 예외처리 옵셔널이 붙어있어서 강제 처리
+//        return user;
+//    }
+
+    public User 회원조회(int id){
+        User user = userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다"));
+        return user;
+    }
+
+    public User 로그인(UserRequest.LoginDTO reqDTO){
+        User sessionUser = userJPARepository.findByUsernameAndPassword(reqDTO.getUsername(), reqDTO.getPassword())
+                .orElseThrow(() -> new Exception401("인증되지 않았습니다.")); // orElseThrow 값이 널이면 이라는 뜻
+        return sessionUser; // 세션에 저장
+    }
 
     @Transactional // userJPARepository 가 들고 있으면 안돼!! 한번에 여러개를 할 수 있으니까 서비스에서 통으로 관리해야 함
     public void 회원가입(UserRequest.JoinDTO reqDTO){

@@ -32,14 +32,13 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO reqDTO) {
+        User sessionUser = userService.로그인(reqDTO);
 
-        try {
-            User sessionUser = userRepository.findByUsernameAndpassword(reqDTO);
-            session.setAttribute("sessionUser", sessionUser);
-            return "redirect:/";
-        } catch (EmptyResultDataAccessException e) {
-            throw new Exception401("유저네임 혹은 비밀번호가 틀렸어요");
-        }
+        // User user = userRepository.findById(id);
+        // 이렇게 간단한건 굳이 서비스에서 안땡기고 레파지토리에서 땡겨도 됨.
+
+        session.setAttribute("sessionUser", sessionUser);
+        return "redirect:/";
     }
 
     @GetMapping("/join-form")
@@ -53,20 +52,30 @@ public class UserController {
         return "user/login-form";
     }
 
+//    @GetMapping("/user/update-form")
+//    public String updateForm(HttpServletRequest request) {
+//        User sessionUser = (User) session.getAttribute("sessionUser"); // null 일수가 없다.
+//        User user = userService.회원수정폼(sessionUser.getId()); // null 일수가 없다.
+//        request.setAttribute("user", user);
+//        return "user/update-form";
+//    }
+
+
     @GetMapping("/user/update-form")
     public String updateForm(HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser"); // null 일수가 없다.
-
-        User user = userRepository.findById(sessionUser.getId()); // null 일수가 없다.
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        User user = userService.회원조회(sessionUser.getId());
         request.setAttribute("user", user);
-
         return "user/update-form";
     }
 
+
     @PostMapping("/user/update")
-    public String update(UserRequest.UpdateDTO reqDTO) {
-        User user = (User) session.getAttribute("sessionUser");
-        userRepository.updateById(user.getId(), reqDTO);
+    public String update(UserRequest.UpdateDTO requestDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        User newSessionUser = userService.회원수정(sessionUser.getId(), requestDTO);
+        session.setAttribute("sessionUser", newSessionUser);
+
         return "redirect:/";
     }
 
