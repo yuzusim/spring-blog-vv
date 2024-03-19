@@ -19,6 +19,19 @@ public class BoardJPARepositoryTest {
     @Autowired
     private EntityManager em;
 
+
+    @Test
+    public void findByIdJoinUserAAndReplies_test() {
+        // given
+        int id = 4; // 더미를 알고 넣기
+
+        // when
+        Board board = boardJPARepository.findByIdJoinUserAAndReplies(id).get();
+
+        // then
+
+    }
+
     @Test
     public void save_test() {
         // given
@@ -33,7 +46,7 @@ public class BoardJPARepositoryTest {
         boardJPARepository.save(board);
 
         // then
-        System.out.println("save_test : id"+board.getId()); // lazy 전략
+        System.out.println("save_test : id" + board.getId()); // lazy 전략
 
     }
 
@@ -65,11 +78,11 @@ public class BoardJPARepositoryTest {
         int id = 1;
 
         // when
-        Board board = boardJPARepository.findByIdJoinUser(id);
+        Board board = boardJPARepository.findByIdJoinUser(id).get();
 
         // then
-        System.out.println("findByIdJoinUser_test : "+board.getTitle());
-        System.out.println("findByIdJoinUser_test : "+board.getUser());
+        System.out.println("findByIdJoinUser_test : " + board.getTitle());
+        System.out.println("findByIdJoinUser_test : " + board.getUser().getUsername());
 
     }
 
@@ -77,14 +90,13 @@ public class BoardJPARepositoryTest {
     @Test
     public void findAll_test() {
         // given
-        Sort sort =  Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
 
         // when
-       List<Board> boardList =boardJPARepository.findAll(sort);
+        List<Board> boardList = boardJPARepository.findAll(sort);
 
         // then
-
-        System.out.println("findAll_test : "+boardList);
+        System.out.println("findAll_test : " + boardList);
     }
 
     @Test
