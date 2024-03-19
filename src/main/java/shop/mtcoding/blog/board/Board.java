@@ -6,10 +6,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.user.User;
 import shop.mtcoding.blog.util.MyDateUtil;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -32,8 +35,22 @@ public class Board { // Entity 무조건 기본 생성자가 있어야 오류 �
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
 
+    @OrderBy("id desc")
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) // Entity 객체의 변수명 == FK의 주인
+    private List<Reply> replies = new ArrayList<>();
+
     @Transient // 테이블 생성이 안됨
-    private boolean isOwner;
+    private boolean isBoardOwner;
+
+//    public void checkBoardOwner(){
+//        boolean isReplyOwner = false;
+//
+//        if (sessionUser != null) {
+//            if (reply.getUser().getId() == sessionUser.getId()) {
+//                isReplyOwner = true;
+//            }
+//        }
+//    }
 
     // 생성자 빌더 패턴으로 받기
     @Builder //  필요한것만 .해서 쓰면 됨
