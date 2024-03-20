@@ -30,7 +30,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void 글수정(int boardId, int sessionUserId, BoardRequest.UpdateDTO reqDTO) {
+    public Board 글수정(int boardId, int sessionUserId, BoardRequest.UpdateDTO reqDTO) {
         // 1. 조회 및 예외처리
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
@@ -42,11 +42,13 @@ public class BoardService {
 
         board.setTitle(reqDTO.getTitle());
         board.setContent(reqDTO.getContent());
-    }
+
+        return board; // 변경된 값이 리턴된것
+    } // 더티체킹
 
     @Transactional
-    public void 글쓰기(BoardRequest.SaveDTO reqDTO, User sessionUser) {
-        boardJPARepository.save(reqDTO.toEntitiy(sessionUser));
+    public Board 글쓰기(BoardRequest.SaveDTO reqDTO, User sessionUser) {
+        return boardJPARepository.save(reqDTO.toEntitiy(sessionUser));
     }
 
 
@@ -65,33 +67,12 @@ public class BoardService {
 
     }
 
-    public List<Board> 글목록조회() {
+    public List<BoardResponse.MainDTO> 글목록조회() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return boardJPARepository.findAll(sort);
+        List<Board> boardList = boardJPARepository.findAll(sort);
+        return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
     }
 
-    // board, isOwner
-//    public void 글상세보기(Integer boardId, User sessionUser) {
-//                Board board = boardJPARepository.findByIdJoinUser(boardId)
-//                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
-//
-//        // 로그인을 하고, 게시글의 주인이면 isOwner가 true가 된다.
-//        boolean isOwner = false; // 게시글 주인
-//        if (sessionUser != null) { // 세션 유저가 null이 아니면
-//            if (sessionUser.getId() == board.getUser().getId()) {
-//                isOwner = true;
-//            }
-//        }
-
-//    // board, isOwner
-//    public BoardResponse.DetailDTO 글상세보기(int boardId, User sessionUser) {
-//        Board board = boardJPARepository.findByIdJoinUser(boardId)
-//                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
-//
-//        // 로그인을 하고, 게시글의 주인이면 isOwner가 true가 된다.
-//
-//        return new BoardResponse.DetailDTO(board, sessionUser);
-//    }
 
     // board, isOwner
     public Board 글상세보기(int boardId, User sessionUser) {
