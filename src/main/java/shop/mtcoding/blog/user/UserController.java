@@ -18,14 +18,21 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
+  // TODO: 회원정보 조회 API 필요
+
+    // 액션은 나눠야함 페이지줘만 필요 없음
+    @PostMapping("/user/update")
+    public String update(UserRequest.UpdateDTO requestDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        User newSessionUser = userService.회원수정(sessionUser.getId(), requestDTO);
+        session.setAttribute("sessionUser", newSessionUser);
+
+        return "redirect:/";
+    }
+
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO reqDTO) {
         userService.회원가입(reqDTO);
-//        try {
-//            userRepository.save(reqDTO.toEntity());
-//        } catch (DataIntegrityViolationException e) {
-//            throw new Exception400("동일한 유저 네임이 존재합니다.");
-//        }
         return "redirect:/";
     }
 
@@ -40,47 +47,10 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/join-form")
-    public String joinForm() {
-        return "user/join-form";
-    }
-
-    @GetMapping("/login-form")
-    public String loginForm() {
-
-        return "user/login-form";
-    }
-
-//    @GetMapping("/user/update-form")
-//    public String updateForm(HttpServletRequest request) {
-//        User sessionUser = (User) session.getAttribute("sessionUser"); // null 일수가 없다.
-//        User user = userService.회원수정폼(sessionUser.getId()); // null 일수가 없다.
-//        request.setAttribute("user", user);
-//        return "user/update-form";
-//    }
-
-
-    @GetMapping("/user/update-form")
-    public String updateForm(HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        User user = userService.회원조회(sessionUser.getId());
-        request.setAttribute("user", user);
-        return "user/update-form";
-    }
-
-
-    @PostMapping("/user/update")
-    public String update(UserRequest.UpdateDTO requestDTO) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        User newSessionUser = userService.회원수정(sessionUser.getId(), requestDTO);
-        session.setAttribute("sessionUser", newSessionUser);
-
-        return "redirect:/";
-    }
-
     @GetMapping("/logout")
     public String logout() {
         session.invalidate();
         return "redirect:/";
     }
+
 }
